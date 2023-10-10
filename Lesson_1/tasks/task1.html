@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Task1</title>
+	<link rel="stylesheet" href="../css/style.css">
+	<script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+</head>
+<body>
+	<div class="wrapper">
+		<header>
+			<h1>
+				<p>Задача 1. Вводиться кількість пасажирів. Вивести:
+					скільки потрібно автобусів (кожен автобус на 20 місць)
+					скільки пляшок води (кожному пасажиру 2 пляшки)
+					скільки бутербродів (кожному пасажиру 3 бутерброди)
+					</p>
+			</h1>
+		</header>
+		<main class="block">
+	 <div id="app">
+		<label>
+			Введіть кількість пасажирів:
+			<input type="number" v-model="passNumbers">
+		</label>
+		<h2>Вам необхідно:</h2>  
+		<label>
+			<span>{{busNumbers}}</span>     
+			автобусів
+		</label>
+		<label>
+			<span>{{quantityBottle}}</span> 
+			пляшек води
+		</label>
+		<label>
+			<span>{{quantityBurger}}</span> 
+			бутербродів
+		</label>
+
+	 </div>
+		</main>
+		<footer></footer>
+	</div>
+<script>
+	const {createApp} = Vue
+const	 numberOfPassForOneBus = 20,
+			 quantityBottleForPass = 2,
+			 quantityBurgersForPass = 3
+	const app = createApp({
+	
+		data(){
+			return{
+				passNumbers:1
+			};
+		},
+computed : {
+busNumbers () {
+const busNumbers  = Math.ceil(this.passNumbers / numberOfPassForOneBus)
+ return busNumbers < 1 ? 1 : busNumbers
+},
+quantityBottle () {
+	   return  this.passNumbers * quantityBottleForPass
+		 
+},
+quantityBurger(){
+	return  this.passNumbers * quantityBurgersForPass
+}
+			},
+ 	
+	})
+	app.mount('#app')
+</script>
+</body>
+</html>

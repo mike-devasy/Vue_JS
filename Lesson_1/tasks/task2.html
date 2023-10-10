@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Task2</title>
+	<link rel="stylesheet" href="../css/style.css">
+	<script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+</head>
+<body>
+	<p>Задача 2. Вводиться номер місяця. Автоматично виводити рекомендований одяг<br> 
+		(зима – пальто, літо – шорти ….). Також автоматично виводити зображення з відповідним<br>
+		 зображенням лісу (зима – ліс зі снігом, осінь – жовтий ліс, …).</p>
+		 <div id="app">
+			<label >
+				Введіть поточний місяць:
+<input type="number" v-model="userMonth"  >
+			</label>
+			<h2>Сьогодні треба вдягнути :</h2>
+			<span>{{selectedClothingInfo[0]}}</span>
+			<div class="image"><img :src="selectedClothingInfo[1]" alt="photo"></div>
+		 </div>
+		 <script>
+			const{createApp} = Vue
+			const app = createApp({
+				data(){
+					return{
+						userMonth: null,
+						
+					}
+				},
+			computed:{
+				selectedClothing(){
+						switch (parseInt(this.userMonth)) {
+							case 12:
+							case 1:
+							case 2: 
+							return  ['Шуба','../img/зима.jpg'];
+						
+							case 3:
+							case 4:
+							case 5: 
+							return  ['Пальто', '../img/весна.jpg'];
+						
+							case 6:
+							case 7:
+							case 8: 
+							return ['Вишиванка','../img/літо.jpg'];
+						
+							case 9:
+							case 10:
+							case 11: 
+							return  ['Плащ', '../img/осінь.jpg'] ;
+					
+								default:
+								return ['Який місяць?', '../img/фон.jpg']
+						}
+					},
+					selectedClothingInfo() {
+                        return this.selectedClothing;
+                    }
+				}
+			})
+			app.mount('#app');
+		 </script>
+</body>
+</html>

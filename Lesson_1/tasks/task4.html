@@ -1,0 +1,117 @@
+<!-- @format -->
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Task4</title>
+    <link rel="stylesheet" href="../css/style.css" />
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+  </head>
+  <body>
+    <p>
+      Задача 4. “Рахунок у банку” Вимоги: 1) Спочатку сума дорівнює 0грн.
+      Змінити суму у гривнях можна або зарахуванням на рахунок, або зняттям. 2)
+      Сума автоматично переводиться у долари та євро (фіксований курс задається
+      у data). 3) можливість зарахувати суму (контролювати, щоб не була
+      від’ємною) 4) можливість зняти (щоб не можна зняти більше ніж є на
+      рахунку) 5) при виконанні зняття і зарахування коштів вираховувати 3% від
+      суми (відображати кількість відсотків автоматично) При зміні суми : - якщо
+      було зняття, то суму відоражати червоним - якщо було зарахування, то суму
+      відображати зеленим Якщо сума валюти менша за 100 то відображати червоним
+      кольором, інакше - зеленим
+    </p>
+    <img class="image" src="../img/task4.png" alt="formuls" />
+    <div   class="bank" id="app">
+      <div class="bank__titles">
+        Сума на рахунку:
+        <span :style="{color: amountColor}">{{amount}}грн</span>
+      </div>
+      <div class="bank__titles">
+        <label class="bank__label"
+          >Зарахувати на рахунок:
+          <input @input="sumOfServiceAdd" type="number" v-model="addToAmount"
+        /></label>
+        <button @click="addSum" class="bank__button">Зарахувати</button>
+      </div>
+      <div class="bank__titles">
+        <label class="bank__label"
+          >Зняти з рахунку:
+          <input
+            @input="sumOfServiceSubtr"
+            type="number"
+            v-model="subtractFromAmount"
+        /></label>
+        <button @click="subtrSum" class="bank__button">Зняти</button>
+      </div>
+      <div class="bank__titles">
+        Відсотки за обслуговання: <span>{{sumOfService}}грн</span>
+      </div>
+      <span class="bank__line"></span>
+      <div class="bank__titles">Сума у доларах:<span :style="{color: currencyColor}">{{amountInDollars}} $</span></div>
+      <div class="bank__titles">Сума у євро:<span  :style="{color: currencyColor}">{{amountInEuro}} Є</span></div>
+    </div>
+    <script>
+      const { createApp } = Vue
+			const dollarRate = 37,
+            euroRate = 41,
+            taxes = 0.03
+      const app = createApp({
+        data() {
+          return {   
+            amount: 0,
+            addToAmount: null,
+            subtractFromAmount: null,
+            sumOfService: null,
+            amountInDollars: 0,
+            amountInEuro: 0,
+						amountColor:null,
+						currencyColor:null
+          }
+        },
+        methods: {
+          addSum() {
+						this.amountColor = 'green'
+            this.amount += parseFloat(this.addToAmount) - this.sumOfService
+            this.amountInDollars = (this.amount / dollarRate).toFixed(2)
+            this.amountInEuro = (this.amount / euroRate).toFixed(2)
+						if ((this.amountInEuro || this.amountInDollars ) < 100) this.currencyColor = 'red'
+						else this.currencyColor = 'green'
+            this.addToAmount = null
+            this.sumOfService = 0
+          },
+          subtrSum() {
+						this.amountColor = 'red'
+            if (this.subtractFromAmount + this.sumOfService <= this.amount) {
+              this.amount -=
+                parseFloat(this.subtractFromAmount) + this.sumOfService
+              this.amountInDollars = (this.amount / dollarRate).toFixed(2)
+              this.amountInEuro = (this.amount / euroRate).toFixed(2)
+							if ((this.amountInEuro || this.amountInDollars ) < 100) this.currencyColor = 'red'
+						else this.currencyColor = 'green'
+              this.subtractFromAmount = null
+            }
+            this.sumOfService = 0
+          },
+        },
+        computed: {
+          getAmountColor() {
+						return this.amountColor
+          },
+          getCurrencyColor() {
+					return this.currencyColor
+          },
+          sumOfServiceAdd() {
+            this.sumOfService = this.addToAmount * taxes
+          },
+          sumOfServiceSubtr() {
+            this.sumOfService = this.subtractFromAmount * taxes
+          },
+        },
+      })
+      app.mount("#app")
+    </script>
+  </body>
+</html>

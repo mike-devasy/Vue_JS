@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Task5</title>
+	<link rel="stylesheet" href="../css/style.css">
+	<script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+</head>
+<body>
+	<p>
+		Задача 5. Додаток містить масив об’єктів (логін, пароль) --  інсуючі логіни і паролі.<br>
+		 Користувач вводить логін і пароль, а програма повідомляє чи може користувач бути авторизованим <br>
+		 (чи є він одним з масиву).
+		</p>
+		<img class="image" src="../img/task5.png" alt="formuls" /> 
+		<div class="cover">
+			<div  class="authorization"   id="app">
+				<label>Login:
+					<input type="text" v-model="login" >
+				</label>
+				<label>Password:
+					<input type="password" v-model="password">
+				</label>
+				<button @click="check"  class="authorization__button">Увійти</button>
+				<span class="result">{{result}}</span>
+			</div>
+		</div>
+<script>
+	const {createApp} = Vue
+	const	usersData = [{'aaa': '12As'}, {'bbb': '78Ytt'}, {'ccc': '41Wdv'}, {'ddd':'gf78Qs'}]
+	const app = createApp({
+		data () {
+			return{
+login:'',
+password:'',
+result: '',
+			}
+		},
+		methods:{
+			check(){
+   	let userExists = usersData.find(user => user[this.login] === this.password)
+     if(userExists) this.result = 'Ласкаво просимо!'
+		 else this.result = 'Логін або пароль невірні'
+		 this.login = null
+		 this.password = null
+			}
+		}
+	})
+app.mount('#app')
+</script>
+</body>
+</html>
