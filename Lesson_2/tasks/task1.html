@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Task1</title>
+	<link rel="stylesheet" href="../css/style.css">
+	<script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+	<style>
+input{
+	padding: 5px;
+}
+.log-in{
+	color:green;
+}
+.error-ivan{
+color:blue;
+}
+.error{
+color:red;
+}
+.is-checked{
+	width: 200px;
+	height: 200px;
+	padding: 20px;
+	background: url('/img/smile.png') 0 0  no-repeat;
+}
+	</style>
+</head>
+<body>
+	<div class="wrapper">
+		<header>
+			<p>
+				Задача 1.Вводимо логіна і пароль. Якщо логін вірний відображаємо смайл.<br> 
+				Якщо ні, то:<br> 
+				1) якщо логін = Іван – колір повідомлення про помилку синій<br> 
+				2) якщо хтось інший, то колір повідомлення червоний
+				</p>
+		<img class="image" src="../img/task1.png" alt="formuls" />
+		</header>
+		<main class="block">
+			<div  class="authorization"   id="app">
+				<label>Login:
+					<input type="text" v-model="login" >
+				</label>
+				<label>Password:
+					<input type="password" v-model="password">
+				</label>
+				<button @click="checkUser"  class="authorization__button">GO</button>
+				<span class="result" :class="statusColor">{{result}}</span>
+				<div :class="imageOk"></div>  
+			</div>
+		</main>
+		<footer></footer>
+	</div>
+</body>
+<script>
+	const {createApp} = Vue
+	const	usersData = [{'ivan': '111'}, {'bogdan': '222'}, {'marichka': '333'}]
+	const app = createApp({
+		data(){
+			return{
+login: '',
+password :'',
+result :null,
+			}
+		},
+		computed:{
+			statusColor(){
+				let currentStateClass = null
+				if(this.result === 'Ласкаво просимо!')  currentStateClass = 'log-in'
+			  else if( this.login.toLowerCase() === 'ivan' && this.result === 'Логін або пароль невірні') currentStateClass = 'error-ivan'
+				else currentStateClass = 'error'
+				return currentStateClass
+			},
+			imageOk(){
+				return this.result === 'Ласкаво просимо!'? 'is-checked': ''
+ 
+			}
+		},
+		methods:{
+			checkUser(){
+		let userCheck = usersData.find(user => user[this.login.toLowerCase()] === this.password)
+      this.result = userCheck ? 'Ласкаво просимо!' : 'Логін або пароль невірні'
+   
+		 this.login = ''
+		 this.password = ''
+			}
+		}
+	})
+	app.mount('#app')
+</script>
+</html>

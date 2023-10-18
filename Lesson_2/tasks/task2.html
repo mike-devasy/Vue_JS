@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Task2</title>
+	<link rel="stylesheet" href="../css/style.css">
+	<script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+	<style>
+		.ticket{
+	padding: 40px;
+}
+h1,.change-question{
+	color:blue;
+	text-align: left;
+}
+select{
+	background-color:rgba(0, 255, 255, 0.395);
+	font-size: 25px;
+	text-align: center;
+	width: 300px;
+	height: 40px;
+	margin-left: 50px;
+	color:rgb(20, 73, 171)
+}
+.result{
+	margin-top: 30px;
+	width: 600px;
+	height: 300px;
+}
+.business{
+	background-image: url('../img/busines-clas.jpg');
+	background-size: cover;
+}
+.economy{
+	background-image: url('../img/cloud.png');
+	background-size: cover;
+}
+.images{
+	position: relative;
+	top:25%;
+padding: 30px;
+display: flex;
+justify-content: space-evenly;
+}
+.images img {
+	width: 90px;
+  height: 120px;
+}
+ 
+.offer-food{
+	padding-top: 130px;
+}
+.offer-food__buttons{
+	display: flex;
+	gap: 10px;
+	padding-left: 40px;
+} 
+ 
+	</style>
+</head>
+<body>
+	<p class="descr">
+		Задача 2. З випадаючого списку вибираємо клас квитка у літаку. Якщо <br>
+1) бізнес -  виводимо елементи для вибору газети та коньяку (якщо вибрано коньяк, <br>
+то запропонувати закуску (так/ні)), на фоні зображення бізнес кают <br>
+2) економ – виводимо елементи для вибору типу пива і чипсів, на фоні хмарки.
+	</p>
+	<div class="ticket"  id="app">
+
+		<select    @change="getSelectedClass" v-model="selectValue">
+			<option value="defaultValue" disable   >Оберіть класс:</option>
+			<option value="business">Business Class</option>
+			<option value="economy">Economy Class</option>
+		</select>
+		<div class="result" :class="getResultClass">
+			<div class="change-question" v-if="isBusiness === null">
+				<h1>Оберіть класс свого квитка☝️☝️☝️</h1>
+			</div>
+			<template  v-else-if ="isBusiness">
+				<div class="images">
+					<img  style="cursor: pointer;"  @click="getFoodOfferMessage" src="../img/conjac.png" alt="cognac">
+					<img src="../img/news.png" alt="newspaper">
+				</div>
+			</template>
+			<template v-else>
+				<div class="images">
+					<img src="../img/beer.png" alt="cognac">
+					<img src="../img/cheaps.png" alt="newspaper">
+				</div>
+			</template>
+			<template  v-if="foodOfferMessage">
+				<h1 class="offer-food">{{foodOfferMessage}}</h1>
+				<div class="offer-food__buttons">
+					<button class="button">Так</button>
+					<button class="button">Ні</button>
+				</div>
+			</template>
+		</div>
+	</div>
+	<script>
+	const {createApp} = Vue
+	const app = createApp({
+data(){
+	return{
+selectValue:'defaultValue',
+isBusiness:null,
+foodOfferMessage:null,
+	}},
+	computed:{
+		getResultClass(){
+let resultClass ;
+if(this.isBusiness === null) resultClass = ''
+else if (this.isBusiness) resultClass = 'business'
+else resultClass = 'economy'
+return resultClass
+		}
+	},
+	methods:{
+		getSelectedClass(){
+this.foodOfferMessage = null
+if(this.selectValue && this.selectValue === 'business'){
+	return this.isBusiness = true}
+	else {return this.isBusiness = false} 
+	return this.isBusiness;
+		},
+		getFoodOfferMessage(){
+			this.foodOfferMessage = 'Бажаєте отримати закуску ?'
+		}
+	},
+}
+	).mount('#app')
+	</script>
+
+</body>
+</html>
