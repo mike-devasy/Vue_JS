@@ -1,0 +1,190 @@
+<!-- @format -->
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Task6</title>
+    <link rel="stylesheet" href="../css/style.css" />
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <style>
+      table,
+      th,
+      td {
+				height: 40px;
+        border: 1px solid black;
+        font-size: 16px;
+      }
+			table{
+				width: 300px;
+			}
+      .cooking-board {
+        display: flex;
+      }
+			.cooking-board__column{
+
+			}
+			.cooking-board__item{
+				display: flex;
+				justify-content: space-between;
+				align-items: center;
+				padding: 5px;
+		    font-size: 18px;
+			}
+			.button-status{
+				width: 80px;
+				height: 20px;
+				margin: 0;
+				font-size: 14px;
+			}
+  .make-order{
+		display: flex;
+		align-items: center;
+		gap: 100px;
+	}
+	.make-order__label{
+		display: inline-flex;
+		flex-wrap: nowrap;
+		width: 500px;
+		justify-content: space-between;
+	}
+	.make-order__label span{
+		white-space: nowrap;
+		font-size: 25px;
+	}
+	.make-order__input{
+		display: inline-block;
+		width: 300px;
+    padding: 5px;
+		font-size: 18px;
+	}
+    </style>
+  </head>
+  <body>
+    <p>
+      Задача 6. Задача. На кухню поступають замовлення. Спочатку ми додаємо їх у
+      список <br />
+      “Очікують на виконання”, якщо повар береться робити — замовлення
+      переходить у список “Виконуються”,<br />
+      якщо замовлення виконано — переходить у список “Готові до виносу”. Якщо
+      натиснути на “Подано” - страва зникає з таблиці
+    </p>
+    <img class="image image_6" src="../img/task6.png" alt="formuls" />
+    <div id="app">
+      <div class="make-order">
+        <label  class="make-order__label"
+          ><span>Нова замовлена страва:</span>
+          <input   class="make-order__input"  type="text" v-model="makeOrder" />
+        </label>
+        <button   @click="onSelectToWaitingList" type="button" style="height: 30px;">Додати</button>
+      </div>
+      <div class="cooking-board">
+					<div class="cooking-board__column">
+						<table>
+							<thead>
+							<th>Очікують на виконання</th>
+							</thead>
+							<tbody>
+								<tr  v-for="order in waitingList" :key="order.id" >
+									<td  class="cooking-board__item">
+										{{order.order}}
+										<button
+										class="button-status"
+											@click="onSelectToProcessingList(order)"
+											class="button-waiting"
+										>
+											Готувати
+										</button>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+        <div class="cooking-board__column">
+					<table>
+										<thead>
+												<tr>
+																	<th>Виконуються</th>
+																</tr>
+										</thead>
+										<tbody>
+															<tr v-for="order in  processingList" :key="order.id">
+												<td class="cooking-board__item">
+													{{order.order}}
+													<button
+																	class="button-status"
+														@click="onSelectToCompletedList(order)"
+														class="button-waiting"
+													>
+														Приготовлено
+													</button>
+												</td>
+											</tr>
+										
+														</tbody>
+									</table>
+				</div>
+        <div class="cooking-board__column">
+					<table>
+										<thead>
+												<th>Готові до виносу</th>
+										</thead>
+										<tbody>
+											<tr v-for="order in  completedList" :key="order.id">
+												<td  class="cooking-board__item">
+													{{order.order}}
+													<button
+																	class="button-status"
+														@click="onSelectToDeletedList(order)"
+														class="button-waiting"
+													>
+														Подано
+													</button>
+												</td>
+											</tr>
+														</tbody>
+									</table>
+				</div>
+      </div>
+    </div>
+    <script>
+      const { createApp } = Vue
+      const app = createApp({
+        data() {
+          return {
+            makeOrder: null,
+            waitingList: [],
+            processingList: [],
+            completedList: [],
+						nextId:1
+          }
+        },
+        methods: {
+          onSelectToWaitingList() {
+						let order = {
+						id:this.nextId++,
+						order:this.makeOrder
+					}
+           this.waitingList.push(order)
+            this.makeOrder = null
+          },
+          onSelectToProcessingList(order) {
+						console.log(this.waitingList)
+            this.processingList.push(order)
+						this.waitingList = this.waitingList.filter(item => item.id !== order.id)
+          },
+          onSelectToCompletedList(order) {
+            this.completedList.push(order)
+						this.processingList = this.processingList.filter(item =>item.id !== order.id)
+          },
+          onSelectToDeletedList(order) {
+						this.completedList = this.completedList.filter(item => item.id !== order.id)
+          },
+        },
+      })
+      app.mount("#app")
+    </script>
+  </body>
+</html> 

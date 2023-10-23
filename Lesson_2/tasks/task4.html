@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Task4</title>
+	<link rel="stylesheet" href="../css/style.css">
+	<script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+	<style>
+		.worker-list{
+margin-left: 100px;
+margin-top: 50px;
+display: flex;
+flex-direction: column;
+gap: 10px;
+padding: 20px;
+width: 300px;
+background-color:aqua
+		}
+		.worker-list__item{
+font-size: 25px;
+		}
+	</style>
+</head>
+<body>
+	<p>Задача 4.Вивести список як маркований список з елементами у форматі (name: salary)</p>
+<img class="image" src="../img/task4-1.png" alt="formuls" />
+<img class="image" src="../img/task4-2.png" alt="formuls" />
+<div id="app">
+	<ol class="worker-list">
+			<li class="worker-list__item" v-for="worker in workerList" :key="worker.id" >
+				{{worker.id}}---{{worker.name}} --- {{worker.salary}}
+			</li>
+	</ol>
+</div>
+<script>
+	const{createApp} = Vue
+	createApp({
+		data(){
+			return{
+				workerList:[
+					{
+						id:'111',
+						name:'Ivanov',
+						salary:10000,
+					},
+					{
+						id:'222',
+						name:'Petrov',
+						salary:5000,
+					},
+					{
+						id:'333',
+						name:'Sidorov',
+						salary:50000,
+					},
+				],
+			}
+		},
+ 
+		}).mount('#app')
+</script>
+</body>
+</html>

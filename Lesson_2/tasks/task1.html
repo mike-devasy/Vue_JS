@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Task1</title>
+	<link rel="stylesheet" href="../css/style.css">
+	<script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+	<style>
+input{
+	padding: 5px;
+}
+.log-in{
+	color:green;
+}
+.error-ivan{
+color:blue;
+}
+.error{
+color:red;
+}
+.is-checked{
+	width: 200px;
+	height: 200px;
+	padding: 20px;
+	background: url('/img/smile.png') 0 0  no-repeat;
+}
+	</style>
+</head>
+<body>
+	<div class="wrapper">
+		<header>
+			<p>
+				Задача 1.Вводимо логіна і пароль. Якщо логін вірний відображаємо смайл.<br> 
+				Якщо ні, то:<br> 
+				1) якщо логін = Іван – колір повідомлення про помилку синій<br> 
+				2) якщо хтось інший, то колір повідомлення червоний
+				</p>
+		<img class="image" src="../img/task1.png" alt="formuls" />
+		</header>
+		<main class="block">
+			<div  class="authorization"   id="app">
+				<label>Login:
+					<input type="text" v-model.lazy="login" >
+				</label>
+				<label>Password:
+					<input type="password" v-model="password">
+				</label>
+				<button @click="checkUser"  class="authorization__button">GO</button>
+				<span  v-if="isUserLogin !== null"  class="result" :class="statusColor">{{message}}</span>
+				<div :class="imageOk"></div>  
+			</div>
+		</main>
+		<footer></footer>
+	</div>
+</body>
+<script>
+	const {createApp} = Vue
+	const	usersData = [{'ivan': '111'}, {'bogdan': '222'}, {'marichka': '333'}]
+	const app = createApp({
+		data(){
+			return{
+login: '',
+password : '',
+isUserLogin:null,
+message :null,
+currentStateClass:null
+			}
+		},
+		computed:{
+			statusColor(){
+       const userLogin = this.login.toLowerCase();
+				if(!this.isUserLogin && userLogin === 'ivan') {
+					this.currentStateClass = 'error-ivan'
+			    this.message = 'Логін або пароль невірні'
+				}
+      else if(!this.isUserLogin) {
+				this.currentStateClass = 'error'
+				this.message = 'Логін або пароль невірні'
+			}
+			else {
+				this.message = 'Ласкаво просимо!'
+					this.currentStateClass = 'log-in'
+			}
+				return [
+					this.currentStateClass,
+				  this.message      
+			]
+			},
+			imageOk(){
+				return this.isUserLogin ? 'is-checked': ''
+			}
+		},
+		methods:{
+		checkUser(){
+   const userLogin = this.login.toLowerCase();
+   this.isUserLogin = usersData.find(user => user[userLogin] === this.password)
+		}
+		}
+	})
+	app.mount('#app')
+</script>
+</html>
