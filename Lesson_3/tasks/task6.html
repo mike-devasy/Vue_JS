@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Task6</title>
+	<link rel="stylesheet" href="../css/style.css">
+	<script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+	<style>
+		#app{
+font-size: 25px;
+margin-left: 50px;
+margin-top: 50px;
+padding-bottom: 100px;
+		}
+	 
+		.wrapper-container{
+display: flex;
+gap: 50px;
+		}
+		img{
+			width: 500px;
+		}
+		.title{
+			font-size: 30px;
+			text-align: center;
+color:blueviolet;
+font-weight: 700;
+margin-bottom: 20px;
+		}
+		.list{
+width: 200px;
+margin-bottom: 20px;
+border:3px solid rebeccapurple;
+ border-radius: 15px;
+background-color: rgba(98, 60, 164, 0.281);
+
+		}
+		button{
+margin-left: 200px;
+width: 160px;
+padding: 10px;
+border:3px solid rebeccapurple;
+border-radius: 10px;
+background-color: paleturquoise;
+transition: all 0.3s ease 0s;
+		}
+		button:hover{
+background-color: rgb(60, 164, 164);
+color:azure;
+		}
+		.select-container{
+margin-top: 30px;
+margin-left: 100px;
+		}
+		.select-container__list{
+			background-color: paleturquoise;
+			width: 300px;
+		}	
+		.select-container__title{
+margin-bottom: 20px;
+padding-left: 60px;
+color:red;
+font-size: 35px;
+		}	
+		.item{
+			padding: 10px;
+			transition: all 0.6s ease 0s;
+			cursor: pointer;
+		}	
+		.item:hover{
+			background-color: rgba(128, 128, 128, 0.413);
+		}
+		.select-dancer{
+			background-color: rgba(145, 68, 68, 0.413);
+		}
+	</style>
+</head>
+<body>
+	<p>
+		Пари для танців. Поступово вибираємо хлопця, дівчину і додаємо у обрані пари.<br> 
+Пару можна видалити. Поки не вибрано хлопця і дівчину кнопка «Додати» заблокована.<br>   
+Якщо не вистачає хлопців або дівчат вибір також блокується.
+</p>
+<img src="../img/photo6.png" alt="">
+<div id="app">
+<div class="wrapper-container">
+	<div class="boys-container container">
+		<h4 class="boys-container__title title">Хлопці</h4>
+		<ul class="boys-container__list boys-list list">
+			<li class="boys-list__item item" :class="{'select-dancer':selectedDancerBoyId === boy.id}" @click="onSelectDancerBoy(boy)"  v-for="boy in boysDancerArray" :key="boy.id">{{boy.name}}</li>
+		</ul>
+	</div>
+	<div class="girls-container container">
+		<h4 class="girls-container__title title">Дівчата</h4>
+		<ul class="girls-container__list girls-list list">
+			<li class="girls-list__item item" :class="{'select-dancer':selectedDancerGirlId === girl.id}" @click="onSelectDancerGirl(girl)" v-for="girl in girlsDancerArray" :key="girl.id">{{girl.name}}</li>
+		</ul>
+	</div>
+</div>
+<button class="boys-girls-select" @click="onSelectDancePair">Додати</button>
+<div class="select-container container">
+	<h4 class="select-container__title ">Обрані пари</h4>
+	<ul class="select-container__list select-list list">
+		<li class="select-list__item item" v-for="selectPair in selectedDancePairs" :key="index">{{selectPair[0].name}}   ------   {{selectPair[1].name}}</li>
+	</ul>
+</div>
+</div>
+</body>
+<script>
+	const{createApp} = Vue
+const boysDancerList = ['Іван', 'Петро', 'Степан', 'Олег', 'Сергій', 'Станіслав'];
+const girlsDancerList = ['Оксана', 'Наталія', 'Тетяна', 'Ольга', 'Роксолана'];
+const boysDancerArray = boysDancerList.map((name, index) => {return {id: index +1, name:name}});
+const girlsDancerArray = girlsDancerList.map((name, index) => {return {id: index +1, name:name}});
+		const app = createApp({
+			data(){
+				return{
+boysDancerArray: boysDancerArray,
+girlsDancerArray: girlsDancerArray,
+selectedDancePairs:[],
+selectedDancerBoyId:null,
+selectedDancerGirlId:null,
+				}
+			},
+			methods:{
+				onSelectDancerBoy(boy){
+     this.selectedDancerBoyId = boy.id
+				},
+				onSelectDancerGirl(girl){
+     this.selectedDancerGirlId = girl.id
+				},
+			onSelectDancePair(){
+				if(this.selectedDancerBoyId && this.selectedDancerGirlId){
+					const selectedBoy = this.boysDancerArray.find(boy => boy.id === this.selectedDancerBoyId)
+					const selectedGirl = this.girlsDancerArray.find(girl => girl.id === this.selectedDancerGirlId)
+					this.selectedDancePairs.push([selectedBoy, selectedGirl]);
+					this.boysDancerArray = this.boysDancerArray.filter(boy => boy !== selectedBoy)
+					this.girlsDancerArray = this.girlsDancerArray.filter(girl => girl !== selectedGirl)
+					console.log('this.selectedDancePairs');
+					console.dir(this.selectedDancePairs);
+					this.selectedDancerBoyId = null;
+          this.selectedDancerGirlId = null;
+				}
+			}
+		}
+		}
+		);
+	app.mount('#app')
+</script>
+</html>

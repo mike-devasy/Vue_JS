@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Task9</title>
+	<link rel="stylesheet" href="../css/style.css">
+	<script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+	<style>
+		.container{
+			font-size: 25px;
+margin-left: 50px;
+margin-top: 50px;
+padding-bottom: 100px;
+		}
+		.content{
+display: flex;
+gap: 50px;
+		}
+		.cards{
+			width: 200px;
+margin-bottom: 20px;
+border:3px solid rebeccapurple;
+ border-radius: 15px;
+background-color: rgba(98, 60, 164, 0.281);
+		}
+		.item{
+padding: 10px;
+cursor: pointer;
+		}
+ 
+		.wrong-answer{
+			border:3px solid red;
+
+		}
+		.select-word{
+			border:3px solid blue;
+		}
+	</style>
+</head>
+<body>
+	<p>
+		Задача 9. Перекладач. Користувачу виводять змішані картки з словами на англійській і українській мові.<br>
+		 Користувач поступово клікає на картки (виділяємо синьою рамкою). Якщо знайдено правильні пари карток,<br>
+		 що відповідають одному слову, то видаляємо ці картки. Інакше - виділяємо червоною рамкою і <br>
+		 через секунду забираємо рамку.
+	</p>
+	<img src="../img/photo9.png" alt="">
+	<div id="app">
+		<div class="container">
+			<h1>Знайдіть пари слів</h1>
+			<div class="content">
+				<ul class="ua-cards cards">
+					<li class="ua-cards__item item" :class="{'select-word': this.selectedEnglishWordId === word.id && !showErrorBorder && !isCompleted , 
+					[isRightAnswer]:isCompleted && showErrorBorder}"
+					  @click="onSelectEnglishWord(word)" v-for="word in 	randomEngWords" :key="word.id">{{word.en}}</li>
+				</ul>
+				<ul class="en-cards cards">
+					<li class="ua-cards__item item" :class="{'select-word':this.selectedUkrWordId ===word.id && !showErrorBorder  && !isCompleted  ,[isRightAnswer]:isCompleted && showErrorBorder}"
+					 
+					@click=" onSelectUkrWord(word)" v-for="word in randomUkrWords" :key="word.id">{{word.ua}}</li>
+				</ul>
+			</div>
+		</div>
+	</div>
+</body>
+<script>
+const{createApp} = Vue
+const words = [
+	{id:0, en:'table', ua:'стіл'},
+	{id:1, en:'car', ua:'автомобіль'},
+	{id:2, en:'bus', ua:'автобус'},
+	{id:3, en:'man', ua:'людина'},
+	{id:4, en:'boy', ua:'хлопець'},
+]
+const app = createApp({
+data(){
+	return{
+	words : words,
+	selectedEnglishWordId:null,
+	selectedUkrWordId:null,
+	showErrorBorder:false,
+	randomEngWords:this.randomizeWords(words.map(word =>({ id: word.id, en: word.en }))),
+	randomUkrWords:this.randomizeWords(words.map(word => ({ id: word.id, ua: word.ua }))),
+	}
+},
+computed:{
+isRightAnswer(word){
+ 
+	  if(this.selectedUkrWordId ===  this.selectedEnglishWordId && this.isCompleted) {
+		this.randomEngWords = this.randomEngWords.filter(word => word.id !== this.selectedEnglishWordId)
+		this.randomUkrWords = this.randomUkrWords.filter(word => word.id !== this.selectedUkrWordId)
+		this.selectedUkrWordId = null
+	  this.selectedEnglishWordId = null
+	}
+	 else if (this.isCompleted) {
+		this.showErrorBorder = true
+		setTimeout(()=>{
+			this.showErrorBorder = false
+		}, 2000)
+		return 'wrong-answer'
+	}
+	return null
+
+},
+isCompleted(){
+	return this.selectedUkrWordId !==null && this.selectedEnglishWordId !== null
+}
+},
+methods:{
+	randomizeWords(wordsArray) {
+		const shuffled = [...wordsArray].sort(() => Math.random() - 0.5);
+    return shuffled;
+                },
+ 				
+onSelectEnglishWord(word){
+this.selectedEnglishWordId = word.id
+},
+onSelectUkrWord(word){
+this.selectedUkrWordId = word.id 
+}
+},
+ 
+}
+)
+app.mount('#app')
+</script>
+</html>
